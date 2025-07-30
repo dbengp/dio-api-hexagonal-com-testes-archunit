@@ -44,51 +44,51 @@ Essa estrutura garante que a customer-api mantenha seu domínio livre de detalhe
 
 A visualização a seguir ilustra as principais interações e componentes da customer-api com os sistemas externos:
 
-Snippet de código
-
+```mermaid
 graph TD  
-subgraph "Cliente API"  
-User\[Usuário / Aplicação Externa\] \-- Requisições HTTP \--\> API\_Gateway(API Gateway / Load Balancer)  
-end
+    subgraph "Cliente API"  
+        User[Usuário / Aplicação Externa] -- Requisições HTTP --> API_Gateway(API Gateway / Load Balancer)  
+    end
 
     subgraph "Sistema Customer-API"  
         direction LR
 
         subgraph "Adaptadores de Entrada (Inbound Adapters)"  
-            CAPI\_REST(REST Controllers) \--- P\_IN(Input Ports)  
-            CAPI\_Kafka\_Consumer(Kafka Consumer: Customer Cpf Validation) \--- P\_IN  
+            CAPI_REST(REST Controllers) --- P_IN(Input Ports)  
+            CAPI_Kafka_Consumer(Kafka Consumer: Customer Cpf Validation) --- P_IN  
         end
 
         subgraph "Core da Aplicação (Application)"  
             direction LR  
-            P\_IN \-- Invoca \--\> UC\[Use Cases\]  
-            UC \-- Usa \--\> P\_OUT(Output Ports)  
+            P_IN -- Invoca --> UC[Use Cases]  
+            UC -- Usa --> P_OUT(Output Ports)  
         end
 
         subgraph "Adaptadores de Saída (Outbound Adapters)"  
-            P\_OUT \--- CAPI\_Mongo(MongoDB Repository)  
-            P\_OUT \--- CAPI\_Kafka\_Producer(Kafka Producer: CPF Validation Queue)  
-            P\_OUT \--- CAPI\_Feign(Feign Client: External Address API)  
+            P_OUT --- CAPI_Mongo(MongoDB Repository)  
+            P_OUT --- CAPI_Kafka_Producer(Kafka Producer: CPF Validation Queue)  
+            P_OUT --- CAPI_Feign(Feign Client: External Address API)  
         end  
     end
 
-    API\_Gateway \-- Encaminha \--\> CAPI\_REST  
-    Kafka\_Broker(Kafka Broker) \-- Envia Mensagens \--\> CAPI\_Kafka\_Consumer  
-    CAPI\_Kafka\_Producer \-- Envia Mensagens \--\> Kafka\_Broker  
-    CAPI\_Mongo \-- Armazena/Consulta \--\> MongoDB(Servidor MongoDB)  
-    CAPI\_Feign \-- Requisições HTTP \--\> External\_Address\_API(API Externa: Consulta de Endereços)
+    API_Gateway -- Encaminha --> CAPI_REST  
+    Kafka_Broker(Kafka Broker) -- Envia Mensagens --> CAPI_Kafka_Consumer  
+    CAPI_Kafka_Producer -- Envia Mensagens --> Kafka_Broker  
+    CAPI_Mongo -- Armazena/Consulta --> MongoDB(Servidor MongoDB)  
+    CAPI_Feign -- Requisições HTTP --> External_Address_API(API Externa: Consulta de Endereços)
 
-    style CAPI\_REST fill:\#f9f,stroke:\#333,stroke-width:2px  
-    style CAPI\_Kafka\_Consumer fill:\#f9f,stroke:\#333,stroke-width:2px  
-    style CAPI\_Mongo fill:\#9f9,stroke:\#333,stroke-width:2px  
-    style CAPI\_Kafka\_Producer fill:\#9f9,stroke:\#333,stroke-width:2px  
-    style CAPI\_Feign fill:\#9f9,stroke:\#333,stroke-width:2px  
-    style P\_IN fill:\#cff,stroke:\#333,stroke-width:2px  
-    style P\_OUT fill:\#cff,stroke:\#333,stroke-width:2px  
-    style UC fill:\#fc9,stroke:\#333,stroke-width:2px  
-    style MongoDB fill:\#ccc,stroke:\#333,stroke-width:2px  
-    style Kafka\_Broker fill:\#ccc,stroke:\#333,stroke-width:2px  
-    style External\_Address\_API fill:\#ccc,stroke:\#333,stroke-width:2px
+    style CAPI_REST fill:#000,stroke:#000,stroke-width:2px  
+    style CAPI_Kafka_Consumer fill:#000,stroke:#333,stroke-width:2px  
+    style CAPI_Mongo fill:#000,stroke:#000,stroke-width:2px  
+    style CAPI_Kafka_Producer fill:#000,stroke:#333,stroke-width:2px  
+    style CAPI_Feign fill:#000,stroke:#333,stroke-width:2px  
+    style P_IN fill:#000,stroke:#333,stroke-width:2px  
+    style P_OUT fill:#000,stroke:#333,stroke-width:2px  
+    style UC fill:#000,stroke:#333,stroke-width:2px  
+    style MongoDB fill:#000,stroke:#333,stroke-width:2px  
+    style Kafka_Broker fill:#000,stroke:#333,stroke-width:2px  
+    style External_Address_API fill:#000,stroke:#333,stroke-width:2px
+```
 
 ## **Tecnologias e Interações**
 
