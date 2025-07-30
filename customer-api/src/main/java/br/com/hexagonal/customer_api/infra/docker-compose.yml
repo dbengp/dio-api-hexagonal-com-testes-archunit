@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  kafka:
+    image: bitnami/kafka:latest
+    hostname: kafka
+    container_name: kafka
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    environment:
+      KAFKA_CFG_NODE_ID: 1
+      KAFKA_CFG_PROCESS_ROLES: 'controller,broker'
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: '1@kafka:9093'
+      KAFKA_CFG_LISTENERS: 'PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093'
+      KAFKA_CFG_ADVERTISED_LISTENERS: 'PLAINTEXT://localhost:9092'
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT'
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_CFG_LOG_DIRS: '/bitnami/kafka/data/kraft-combined-logs'
+      ALLOW_PLAINTEXT_LISTENER: 'yes'
+    volumes:
+      - kafka_data:/bitnami/kafka/data
+    healthcheck:
+      test: ["CMD", "bash", "-c", "/opt/bitnami/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server localhost:9092"]
+      interval: 30s
+      timeout: 20s
+      retries: 10
+      start_period: 60s
+  mongodb:
+    image: "bitnami/mongodb:latest"
+    container_name: customer_mongodb_bitnami
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGODB_REPLICA_SET_MODE=primary
+      - MONGODB_ADVERTISED_HOSTNAME=localhost
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MONGODB_DATABASE=customer_db
+    volumes:
+      - mongodb_data:/bitnami/mongodb
+    restart: on-failure
+volumes:
+  kafka_data:
+  mongodb_data:
